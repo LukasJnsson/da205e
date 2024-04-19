@@ -1,0 +1,373 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Solution_Assignment_4.MainPage">
+
+    <ContentPage.Resources>
+        <Style x:Key="ScrollView" TargetType="ScrollView">
+            <Setter Property="BackgroundColor" Value="#888888"/>
+        </Style>
+        <Style x:Key="VerticalStackLayout" TargetType="VerticalStackLayout">
+            <Setter Property="Spacing" Value="25"/>
+            <Setter Property="Padding" Value="30"/>
+            <Setter Property="VerticalOptions" Value="Center"/>
+        </Style>
+        <Style x:Key="Button" TargetType="Button">
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Margin" Value="20"/>
+            <Setter Property="HorizontalOptions" Value="Center"/>
+            <Setter Property="TextColor" Value="#fff"/>
+        </Style>
+
+        <Style x:Key="ModButton" TargetType="Button">
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Margin" Value="8"/>
+            <Setter Property="HorizontalOptions" Value="Center"/>
+            <Setter Property="TextColor" Value="#fff"/>
+        </Style>
+        <Style x:Key="animalManagerLabel" TargetType="Label">
+            <Setter Property="HorizontalOptions" Value="Center"/>
+        </Style>
+        <Style x:Key="animalFoodScheduleContainer" TargetType="Grid">
+            <Setter Property="HorizontalOptions" Value="Center"/>
+        </Style>
+    </ContentPage.Resources>
+
+    <!-- Implemented menu bar based on the following source
+    https://learn.microsoft.com/en-us/dotnet/maui/user-interface/menu-bar?view=net-maui-8.0
+    -->
+    <ContentPage.MenuBarItems>
+        <MenuBarItem x:Name="menuFileLabel">
+            <MenuFlyoutSubItem x:Name="subMenuFileLabel">
+                <MenuFlyoutItem x:Name="menuNewLabel" Clicked="HandleNewFile" />
+                <MenuFlyoutSubItem x:Name="menuOpenLabel">
+                    <MenuFlyoutItem x:Name="menuOpenAsTxtLabel" Clicked="HandleOpenAsTxtFile" />
+                    <MenuFlyoutItem x:Name="menuOpenAsJSONLabel" Clicked="HandleOpenAsJSONFile" />
+                </MenuFlyoutSubItem>
+                <MenuFlyoutItem x:Name="menuSaveLabel" Clicked="HandleSaveFile" />
+                <MenuFlyoutSubItem x:Name="menuSaveAsLabel">
+                    <MenuFlyoutItem x:Name="menuSaveAsTxtLabel" Clicked="HandleSaveAsTxtFile" />
+                    <MenuFlyoutItem x:Name="menuSaveAsJSONLabel" Clicked="HandleSaveAsJSONFile" />
+                </MenuFlyoutSubItem>
+                <MenuFlyoutItem x:Name="menuExitLabel" Clicked="HandleExit" />
+            </MenuFlyoutSubItem>
+        </MenuBarItem>
+    </ContentPage.MenuBarItems>
+
+    <ScrollView Style="{DynamicResource ScrollView}">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <!-- Animal Form -->
+            <StackLayout Grid.Row="0" x:Name="animalForm">
+                <VerticalStackLayout Style="{DynamicResource VerticalStackLayout}">
+
+                    <!-- Animal -->
+                    <Grid x:Name="animalContainer">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+
+                        <Label Grid.Row="0" Grid.Column="1" x:Name="animalNameLabel"/>
+                        <Entry Grid.Row="1" Grid.Column="1" x:Name="animalNameEntry"/>
+
+                        <Label Grid.Row="2" Grid.Column="1" x:Name="animalAgeLabel"/>
+                        <Entry Grid.Row="3" Grid.Column="1" x:Name="animalAgeEntry"/>
+
+                        <Label Grid.Row="4" Grid.Column="1" x:Name="animalGenderLabel"/>
+                        <Picker Grid.Row="5" Grid.Column="1" x:Name="animalGenderPicker">
+                            <Picker.ItemsSource>
+                                <x:Array Type="{x:Type x:String}">
+                                </x:Array>
+                            </Picker.ItemsSource>
+                        </Picker>
+
+                        <Label Grid.Row="6" Grid.Column="1" x:Name="animalCategoryLabel"/>
+                        <Picker Grid.Row="7" Grid.Column="1" x:Name="animalCategoryPicker" SelectedIndexChanged="HandleCategoryChanged">
+                            <Picker.ItemsSource>
+                                <x:Array Type="{x:Type x:String}">
+                                </x:Array>
+                            </Picker.ItemsSource>
+                        </Picker>
+                    </Grid>
+
+                    <!-- Mammal container -->
+                    <Grid x:Name="mammalContainer">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+
+                        <Label Grid.Row="0" Grid.Column="1" x:Name="mammalLabel"/>
+                        <Picker Grid.Row="1" Grid.Column="1" x:Name="mammalPicker" SelectedIndexChanged="HandleMammalChanged">
+                            <Picker.ItemsSource>
+                                <x:Array Type="{x:Type x:String}">
+                                </x:Array>
+                            </Picker.ItemsSource>
+                        </Picker>
+                    </Grid>
+
+                    <!-- Mammal default attributes container -->
+                    <Grid x:Name="mammalDefaultContainer">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+
+                        <Label Grid.Row="0" Grid.Column="1" x:Name="mammalNumberOfTeethLabel"/>
+                        <Entry Grid.Row="1" Grid.Column="1" x:Name="mammalNumberOfTeethEntry"/>
+                    </Grid>
+
+                    <!-- Mammal dog specific attributes container -->
+                    <Grid x:Name="mammalDogContainer">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+
+                        <Label Grid.Row="0" Grid.Column="1" x:Name="dogBreedLabel"/>
+                        <Entry Grid.Row="1" Grid.Column="1" x:Name="dogBreedEntry"/>
+                    </Grid>
+
+                    <!-- Mammal monkey specific attributes container -->
+                    <Grid x:Name="mammalMonkeyContainer">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+
+                        <Label Grid.Row="0" Grid.Column="1" x:Name="monkeyColorLabel"/>
+                        <Entry Grid.Row="1" Grid.Column="1" x:Name="monkeyColorEntry"/>
+                    </Grid>
+
+                    <!-- Reptile container -->
+                    <Grid x:Name="reptileContainer">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+
+                        <Label Grid.Row="0" Grid.Column="1" x:Name="reptileLabel"/>
+                        <Picker Grid.Row="1" Grid.Column="1" x:Name="reptilePicker" SelectedIndexChanged="HandleReptileChanged">
+                            <Picker.ItemsSource>
+                                <x:Array Type="{x:Type x:String}">
+                                </x:Array>
+                            </Picker.ItemsSource>
+                        </Picker>
+                    </Grid>
+
+                    <!-- Reptile default attributes container -->
+                    <Grid x:Name="reptileDefaultContainer">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <Label Grid.Row="0" Grid.Column="1" x:Name="reptileIsDeadlyLabel"/>
+                        <CheckBox Grid.Row="1" Grid.Column="1" x:Name="reptileIsDeadlyCheckbox" Style="{DynamicResource isDeadlyCheckbox}"/>
+                    </Grid>
+
+                    <!-- Reptile lizard specific attributes container -->
+                    <Grid x:Name="reptileLizardContainer">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+
+                        <Label Grid.Row="0" Grid.Column="1" x:Name="lizardTailLengthLabel"/>
+                        <Entry Grid.Row="1" Grid.Column="1" x:Name="lizardTailLengthEntry"/>
+                    </Grid>
+
+                    <!-- Reptile snake specific attributes container -->
+                    <Grid x:Name="reptileSnakeContainer">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+
+                        <Label Grid.Row="0" Grid.Column="1" x:Name="snakeLengthLabel"/>
+                        <Entry Grid.Row="1" Grid.Column="1" x:Name="snakeLengthEntry"/>
+                    </Grid>
+
+                    <Button x:Name="animalAddButton" Clicked="HandleAddAnimal" Style="{DynamicResource Button}"/>
+
+                    <!-- Animals -->
+                    <ListView x:Name="animalManagerListView" ItemsSource="{Binding Animals}" ItemSelected="HandleSelectedAnimal">
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <ViewCell>
+                                    <StackLayout Orientation="Horizontal">
+                                        <Label Text="{Binding .}" />
+                                    </StackLayout>
+                                </ViewCell>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+
+                    <!-- Food Schedule -->
+                    <Grid x:Name="animalFoodScheduleContainer" Style="{DynamicResource animalFoodScheduleContainer}">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+
+                        <Label Grid.Row="0" Grid.Column="1" x:Name="animalEaterTypeLabel"/>
+                        <Label Grid.Row="1" Grid.Column="1" x:Name="animalBreakfastLabel"/>
+                        <Label Grid.Row="2" Grid.Column="1" x:Name="animalLunchLabel"/>
+                        <Label Grid.Row="3" Grid.Column="1" x:Name="animalDinnerLabel"/>
+                    </Grid>
+
+                    <Label x:Name="animalManagerLabel" Style="{DynamicResource animalManagerLabel}"/>
+
+                    <StackLayout Orientation="Horizontal" HorizontalOptions="Center">
+                        <Button x:Name="animalChangeButton" Clicked="HandleChangeAnimal" Style="{DynamicResource ModButton}"/>
+                        <Button x:Name="animalDeleteButton" Clicked="HandleDeleteAnimal" Style="{DynamicResource ModButton}"/>
+                    </StackLayout>
+
+                    <ListView x:Name="animalMealListView" ItemsSource="{Binding Meals}">
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <ViewCell>
+                                    <StackLayout Orientation="Horizontal">
+                                        <Label Text="{Binding .}" />
+                                    </StackLayout>
+                                </ViewCell>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+
+                    <Button x:Name="foodFormButton" Clicked="HandleFoodForm" Style="{DynamicResource Button}"/>
+                </VerticalStackLayout>
+            </StackLayout>
+
+            <!-- Food Form -->
+            <StackLayout Grid.Row="1" x:Name="foodForm">
+                <VerticalStackLayout Style="{DynamicResource VerticalStackLayout}">
+
+                    <Grid x:Name="foodContainer">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+
+                        <Label Grid.Row="0" Grid.Column="1" x:Name="foodNameLabel"/>
+                        <Entry Grid.Row="1" Grid.Column="1" x:Name="foodNameEntry"/>
+
+                        <Label Grid.Row="2" Grid.Column="1" x:Name="ingredientLabel"/>
+                        <Entry Grid.Row="3" Grid.Column="1" x:Name="ingredientEntry"/>
+                    </Grid>
+
+                    <StackLayout Orientation="Horizontal" HorizontalOptions="Center">
+                        <Button x:Name="ingredientAddButton" Clicked="HandleAddIngredient" Style="{DynamicResource ModButton}"/>
+                        <Button x:Name="ingredientChangeButton" Clicked="HandleChangeIngredient" Style="{DynamicResource ModButton}"/>
+                        <Button x:Name="ingredientDeleteButton" Clicked="HandleDeleteIngredient" Style="{DynamicResource ModButton}"/>
+                    </StackLayout>
+
+                    <!-- Ingredients -->
+                    <ListView x:Name="ingredientListView" ItemsSource="{Binding CurrentMeal.Ingredients}" ItemSelected="HandleSelectedIngredient">
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <ViewCell>
+                                    <StackLayout Orientation="Horizontal">
+                                        <Label Text="{Binding .}" />
+                                    </StackLayout>
+                                </ViewCell>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+
+                    <Label x:Name="ingredientsLabel" Style="{DynamicResource animalManagerLabel}"/>
+
+                    <Button x:Name="mealAddButton" Clicked="HandleAddMeal" Style="{DynamicResource ModButton}"/>
+
+                    <!-- Meals -->
+                    <ListView x:Name="mealListView" ItemsSource="{Binding Meals}">
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <ViewCell>
+                                    <StackLayout Orientation="Horizontal">
+                                        <Label Text="{Binding .}" />
+                                    </StackLayout>
+                                </ViewCell>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+
+                    <StackLayout Orientation="Horizontal" HorizontalOptions="Center">
+                        <Button x:Name="mealDeleteButton" Clicked="HandleDeleteMeal" Style="{DynamicResource ModButton}"/>
+                        <Button x:Name="mealCancelButton" Clicked="HandleCancelMeal" Style="{DynamicResource ModButton}"/>
+                    </StackLayout>
+
+                    <Label x:Name="mealLabel" Style="{DynamicResource animalManagerLabel}"/>
+                </VerticalStackLayout>
+            </StackLayout>
+        </Grid>
+    </ScrollView>
+</ContentPage>
